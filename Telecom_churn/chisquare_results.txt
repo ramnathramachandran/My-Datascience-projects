@@ -1,0 +1,98 @@
+Chisquare result for Churn is   (51042.12526774591, 0.0, 1, array([[25864.4953866, 10471.5046134],
+       [10471.5046134,  4239.4953866]]))
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Chisquare result for ServiceArea is   (958.3146928658482, 2.0472595274512682e-07, 746, array([[ 2.84725841,  1.15274159],
+       [14.94810665,  6.05189335],
+       [22.77806727,  9.22193273],
+       ...,
+       [ 9.25358983,  3.74641017],
+       [ 0.7118146 ,  0.2881854 ],
+       [ 0.7118146 ,  0.2881854 ]]))
+Not a category
+Not a category
+Not a category
+Not a category
+Not a category
+Chisquare result for ChildrenInHH is   (4.61817626131507, 0.03163485621782633, 1, array([[27532.27699963, 11146.72300037],
+       [ 8803.72300037,  3564.27699963]]))
+Chisquare result for HandsetRefurbished is   (45.59520482835272, 1.4539708879836166e-11, 1, array([[31288.52265559, 12667.47734441],
+       [ 5047.47734441,  2043.52265559]]))
+Chisquare result for HandsetWebCapable is   (196.37325683591058, 1.2921230309851363e-44, 1, array([[ 3559.78482575,  1441.21517425],
+       [32776.21517425, 13269.78482575]]))
+Chisquare result for TruckOwner is   (1.157607227658802, 0.2819623336364332, 1, array([[29557.38954297, 11966.61045703],
+       [ 6778.61045703,  2744.38954297]]))
+Chisquare result for RVOwner is   (0.5815606024210443, 0.4457012639506194, 1, array([[33379.83395694, 13514.16604306],
+       [ 2956.16604306,  1196.83395694]]))
+Chisquare result for Homeownership is   (8.78331422999254, 0.003039983689868538, 1, array([[24192.44288597,  9794.55711403],
+       [12143.55711403,  4916.44288597]]))
+Chisquare result for BuysViaMailOrder is   (23.99339787075113, 9.666660453552875e-07, 1, array([[23202.30877427,  9393.69122573],
+       [13133.69122573,  5317.30877427]]))
+Chisquare result for RespondsToMailOffers is   (26.688591338952175, 2.39028676982069e-07, 1, array([[22650.65245754,  9170.34754246],
+       [13685.34754246,  5540.65245754]]))
+Chisquare result for OptOutMailings is   (0.00030532137929659576, 0.9860589151693747, 1, array([[35800.71541912, 14494.28458088],
+       [  535.28458088,   216.71541912]]))
+Chisquare result for NonUSTravel is   (0.41381302347756754, 0.5200404823729523, 1, array([[34286.68576018, 13881.31423982],
+       [ 2049.31423982,   829.68576018]]))
+Chisquare result for OwnsComputer is   (0.20230034253271137, 0.6528704477893238, 1, array([[29599.3866045, 11983.6133955],
+       [ 6736.6133955,  2727.3866045]]))
+Chisquare result for HasCreditCard is   (3.751135540708442, 0.0527716490589044, 1, array([[11776.26077928,  4767.73922072],
+       [24559.73922072,  9943.26077928]]))
+Not a category
+Not a category
+Chisquare result for NewCellphoneUser is   (2.9794627566804435, 0.0843272591287213, 1, array([[29343.1333477, 11879.8666523],
+       [ 6992.8666523,  2831.1333477]]))
+Chisquare result for NotNewCellphoneUser is   (2.26747448311423, 0.13211504086572767, 1, array([[31328.38427332, 12683.61572668],
+       [ 5007.61572668,  2027.38427332]]))
+Not a category
+Not a category
+Chisquare result for OwnsMotorcycle is   (2.5777673584025007, 0.10837442421561828, 1, array([[35852.67788509, 14515.32211491],
+       [  483.32211491,   195.67788509]]))
+Not a category
+Not a category
+Chisquare result for MadeCallToRetentionTeam is   (231.02892615676762, 3.555928991655706e-52, 1, array([[35093.88351911, 14208.11648089],
+       [ 1242.11648089,   502.88351911]]))
+Chisquare result for CreditRating is   (214.6120836372454, 1.4651785709512088e-43, 6, array([[ 6066.0840402 ,  2455.9159598 ],
+       [13519.49474014,  5473.50525986],
+       [ 5986.36080475,  2423.63919525],
+       [ 3813.19082414,  1543.80917586],
+       [ 4626.08309989,  1872.91690011],
+       [  820.01042177,   331.98957823],
+       [ 1504.77606911,   609.22393089]]))
+Chisquare result for PrizmCode is   (19.096529606834395, 0.0002611172075138186, 3, array([[17549.78901796,  7105.21098204],
+       [ 1726.15041041,   698.84958959],
+       [11658.09955531,  4719.90044469],
+       [ 5401.96101632,  2187.03898368]]))
+Chisquare result for Occupation is   (10.316148268152288, 0.17135426532792455, 7, array([[  701.8491978 ,   284.1508022 ],
+       [ 1081.24638079,   437.75361921],
+       [  111.75489255,    45.24510745],
+       [26790.5661841 , 10846.4338159 ],
+       [ 6231.93684252,  2523.06315748],
+       [  521.76010343,   211.23989657],
+       [  625.68503536,   253.31496464],
+       [  271.20136345,   109.79863655]]))
+Chisquare result for MaritalStatus is   (36.925487881712506, 9.588091848858717e-09, 2, array([[ 9037.1981899 ,  3658.8018101 ],
+       [14022.74766392,  5677.25233608],
+       [13276.05414618,  5374.94585382]]))
