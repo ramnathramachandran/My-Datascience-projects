@@ -40,5 +40,6 @@ Here missing a churning customer would be much more costly than mislabeling a lo
 
 ### Technology
 
+Python
 
 
