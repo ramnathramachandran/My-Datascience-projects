@@ -16,10 +16,14 @@ Cell2Cell dataset is preprocessed and a balanced version provided for analyzing 
 
 The features are categorized based on five dimensions:
 
-1.Customer demography: Age, Tenure, Gender, Location, Zip code, etc.
+1.Customer demography: Age, Tenure, Gender, Location, Zip code, etc. 
+
 2.Bill and payment: Monthly fee, Billing amount, Count of overdue payment, payment method, Billing type, etc.
+
 3.Network/TV/Phone usage records: Network use frequency, network flow, usage time and period, internet average speed, In-net call duration,    Call type, etc.
+
 4.Customer care/service: Service call number, service type, service duration, account change count
+
 5.Competitors information: Offer detail under similar plan, etc
 
 The dataset had many missing values and as a result of Exploratory Data Analysis few of the numerical variables had Outliers. But I didn't remove the outliers as the values are making sense to the data. I've done Mean imputation for the missing values in the dataset.
