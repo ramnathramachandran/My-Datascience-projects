@@ -8,10 +8,10 @@ The initiative is to collect data in structured manner and translate into meanin
 
 ### Description
 
-The dataset consists of variables representing Customer information like basic info and Demographics and their responses doe each department wise survey for Customer satisfaction. The questionnaire has response levels from 1 to 4 with 1 being Extremely satified and 
+The dataset consists of variables representing Patient information like basic info and Demographics and their responses doe each department wise survey for Patient satisfaction. The questionnaire has response levels from 1 to 4 with 1 being Extremely satified and 
 4 being Not at all satisfied. Departments include Nursing services, Attendees experience Doctors experience, Admission Process, Customer Engagement etc.
 
-The data has 51 variables with 4989 observations and 1 Target predictor Net promotor score(NPS). NPS is multi- class variable with 3 labels "Promoter", "Detractor", "Passive" depending on the overall satisfaction response the customer gave in the survey with levels 1 to 10.
+The data has 51 variables with 4989 observations and 1 Target predictor Net promotor score(NPS). NPS is multi- class variable with 3 labels "Promoter", "Detractor", "Passive" depending on the overall satisfaction response the Patient gave in the survey with levels 1 to 10.
 
 Promoter = score > 7
 
