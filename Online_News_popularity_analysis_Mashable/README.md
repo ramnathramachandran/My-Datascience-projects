@@ -16,8 +16,8 @@ With the growth of the Internet in daily life, people are in a minute away to re
 
 ### Description
 
-The dataset has 58 predictive attributes, 2 non predictive attributes and 1 target value which is the number of shares and article can get.
-Some of the predictive attributes are Number of words in the content, Text subjectivity, Text polarity, Title subjectivity and Polrity, categorical attributes indicating whether an article was published on particular day, number of hyperlinks, number of images in the article etc.
+The dataset has 58 predictive attributes, 2 non predictive attributes and 1 target value which is the number of shares an article can get.
+Some of the predictive attributes are Number of words in the content, Text subjectivity, Text polarity, Title subjectivity and Polarity, categorical attributes indicating whether an article was published on particular day, number of hyperlinks, number of images in the article etc.
 
 After Exploratory Analysis it has been found that most of the predictors and even the target "Number of shares" distributions are skewed with almost 90% of the observations are on the left or right. 
 
