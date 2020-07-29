@@ -1,0 +1,595 @@
+---
+title: "EDA on Text"
+author: "Chirag Ahluwalia"
+date: "4/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Descriptive Statistics 
+
+```{r}
+library(readxl)
+#ratemdsfinal <- read_excel("ratemdsfinal.xlsx")
+ratemdsfinal=read_xlsx('C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/Reviews/ratemdsfinal.xlsx')
+library(dplyr)
+library(kableExtra)
+library(xtable)
+library(stargazer)
+library(knitr)
+library(psych)
+library(ggplot2)
+colSums(is.na(ratemdsfinal))
+
+ratemdsfinal$`Years of Experience`[is.na(ratemdsfinal$`Years of Experience`)]=round(mean(ratemdsfinal$`Years of Experience`,na.rm = T))
+
+# ghetting only the numeric columsn 
+num_cols <- unlist(lapply(ratemdsfinal, is.numeric))  
+rate <- ratemdsfinal[, num_cols]
+
+rate$...1<- NULL
+str(rate)
+names(rate)[1]<- "Exp"
+
+# Print Descriptive Statistics for RateMDs
+kable(xtable(describe(rate)[c(3,4,5,8,9,11)]))
+
+
+# Checking for Normality 
+#library(ggpubr)
+#ggqqplot(rate$Rating)
+#shapiro.test(rate$Rating)
+
+#ggqqplot(rate$Positive_Proportion)
+#shapiro.test(rate$Positive_Proportion)
+
+#ggqqplot(rate$Negative_Proportion)
+#shapiro.test(rate$Negative_Proportion)
+
+#ggqqplot(rate$`Average pos_score`)
+#shapiro.test(rate$`Average pos_score`)
+
+#ggqqplot(rate$`Average neg_score`)
+#shapiro.test(rate$`Average neg_score`)
+
+
+## Multiple t-tests for RateMDs
+a<- lapply(rate, function(x) t.test(x ~ ratemdsfinal$Gender, var.equal = TRUE)$p.value)
+# T-Test for RateMDs with Gender 
+print(a)
+```
+## Statistics based on Gender  
+
+```{r}
+
+#str(ratemdsfinal)
+ratemdsfinal$Gender<- factor(ratemdsfinal$Gender)
+
+rate %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating by Gender on RateMDs\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+rate %>% #plot Positive_Proportion over Gender 
+  ggplot(aes(x=Positive_Proportion,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Positive Proportion by Gender on RateMDs\n(blue=Female, red=Male)",x="Positive_Proportion",y = "Density of Positive Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+rate %>% #plot Negative_Proportion over Gender 
+  ggplot(aes(x=Negative_Proportion,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Negative_Proportion by Gender on RateMDs\n(blue=Female, red=Male)",x="Negative_Proportion",y = "Density of Negative_Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+rate %>% #plot `Average neg_score` over Gender 
+  ggplot(aes(x=`Average neg_score`,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average neg_score` by Gender on RateMDs\n(blue=Female, red=Male)",x="`Average neg_score`",y = "Density of `Average neg_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+rate %>% #plot `Average pos_score` over Gender 
+  ggplot(aes(x=`Average pos_score`,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average pos_score` by Gender on RateMDs\n(blue=Female, red=Male)",x="`Average pos_score`",y = "Density of `Average pos_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+ratemdsfinal %>% #plot Years of Experience over Gender 
+  ggplot(aes(x=`Years of Experience`,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Years of Experience by Gender on RateMDs\n(blue=Female, red=Male)",x="Years of Experience - in years",y = "Density of Years of Experience")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+rate %>% #plot Overall_score over Gender 
+  ggplot(aes(x=Overall_score,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Overall_score by Gender on RateMDs\n(blue=Female, red=Male)",x="Overall_score",y = "Density of Overall_score")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+```
+## Statistics by No of Years of Experience 
+
+```{r}
+summary(ratemdsfinal$`Years of Experience`)
+
+ratemdsfinal$`Years of Experience` <- as.factor(ratemdsfinal$`Years of Experience`)
+levels(ratemdsfinal$`Years of Experience`) = list("Less than 10 years" = c(0:10),
+                                       "11 to 20 years" =c(11:20),
+                                       "21 to 30 years " = c(21:30), 
+                                       "31 years and above" = c(31:56))
+summary(ratemdsfinal$`Years of Experience`)
+
+boxplot(ratemdsfinal$Rating~ratemdsfinal$`Years of Experience`, # Specify the variables to graph, quantitative variable first
+        col=c("orange","thistle","lightgreen","lightblue","gray","yellow"), # Specify the data set that contains the variables
+        main = "Rating over Years of Experience on RateMDs", #Create the chart title
+        xlab = "Rating",  #Create the x-axis label
+        ylab = "",
+        las=1,  # Width of box as proportion of original
+        whisklty = 1,  # Whisker line type; 1 = solid line
+        staplelty = 0,  # Staple (line at end) type; 0 = none
+        outpch = 16,  # Symbols for outliers; 16 = filled circle
+        outcol = "slategray3", 
+        notch=T,horizontal = T# Color for outliers
+) #Create the y-axis label
+
+# Checking the Significance Level of the Factors created
+years.aov1 <- aov(ratemdsfinal$Rating~ratemdsfinal$`Years of Experience`, data = ratemdsfinal)
+summary(years.aov1)
+ 
+TukeyHSD(years.aov1)
+
+# Thus, there is not much significance 
+
+```
+
+## Plots based on Years of Experience over Dependent Variables 
+
+```{r}
+
+boxplot(ratemdsfinal$Rating~ratemdsfinal$`Years of Experience`, # Specify the variables to graph, quantitative variable first
+        col=c("orange","thistle","lightgreen","lightblue","gray","yellow"), # Specify the data set that contains the variables
+        main = "Rating over Years of Experience on RateMDs", #Create the chart title
+        xlab = "Rating",  #Create the x-axis label
+        ylab = "Years of Experience",
+        las=1,  # Width of box as proportion of original
+        whisklty = 1,  # Whisker line type; 1 = solid line
+        staplelty = 0,  # Staple (line at end) type; 0 = none
+        outpch = 16,  # Symbols for outliers; 16 = filled circle
+        outcol = "slategray3", 
+        notch=T,horizontal = T# Color for outliers
+) #Create the y-axis label
+
+rate %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=ratemdsfinal$Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating over Gender spread across Years of Experience on RateMDs\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")+#hide the side signal of fill parameter
+ facet_wrap(ratemdsfinal$`Years of Experience`)
+
+```
+
+## Healthgrades
+
+```{r}
+
+library(readxl)
+#healthgrades <- read_excel("healthgradesfinal.xlsx")
+healthgrades=read_xlsx('C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/Reviews/healthgradesfinal.xlsx')
+str(healthgrades)
+
+healthgrades$Gender<- factor(healthgrades$Gender)
+
+colSums(is.na(healthgrades))
+
+healthgrades$`Years of Experience`[is.na(healthgrades$`Years of Experience`)]=round(mean(healthgrades$`Years of Experience`,na.rm = T))
+
+# ghetting only the numeric columsn 
+num_cols <- unlist(lapply(healthgrades, is.numeric))  
+health <- healthgrades[, num_cols]
+
+# Print Descriptive Statistics for RateMDs
+kable(xtable(describe(health)[c(3,4,5,8,9,11)]))
+
+
+## Multiple t-tests for RateMDs
+a<- lapply(health[], function(x) t.test(x ~ healthgrades$Gender, var.equal = TRUE)$p.value)
+print(a)
+
+```
+
+## Statistics based on Gender 
+
+```{r}
+
+## Plots with Gender 
+health %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=healthgrades$Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating by Gender on HealthGrades\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health %>% #plot Positive_Proportion over Gender 
+  ggplot(aes(x=Positive_Proportion,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Positive Proportion by Gender on HealthGrades\n(blue=Female, red=Male)",x="Positive_Proportion",y = "Density of Positive Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health  %>% #plot Negative_Proportion over Gender 
+  ggplot(aes(x=Negative_Proportion,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Negative_Proportion by Gender on HealthGrades\n(blue=Female, red=Male)",x="Negative_Proportion",y = "Density of Negative_Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health  %>% #plot `Average neg_score` over Gender 
+  ggplot(aes(x=`Average neg_score`,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average neg_score` by Gender on HealthGrades\n(blue=Female, red=Male)",x="`Average neg_score`",y = "Density of `Average neg_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health %>% #plot `Average pos_score` over Gender 
+  ggplot(aes(x=`Average pos_score`,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average pos_score` by Gender on HealthGrades\n(blue=Female, red=Male)",x="`Average pos_score`",y = "Density of `Average pos_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health  %>% #plot Years of Experience over Gender 
+  ggplot(aes(x=`Years of Experience`,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Years of Experience by Gender on HealthGrades\n(blue=Female, red=Male)",x="Years of Experience - in years",y = "Density of Years of Experience")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+health %>% #plot Overall_score over Gender 
+  ggplot(aes(x=Overall_score,fill=healthgrades$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Overall_score by Gender on HealthGrades\n(blue=Female, red=Male)",x="Overall_score",y = "Density of Overall_score")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+```
+
+## Statistics based on Years of Experience in HealthGrades 
+
+```{r}
+
+summary(healthgrades$`Years of Experience`)
+
+healthgrades$`Years of Experience` <- as.factor(healthgrades$`Years of Experience`)
+levels(healthgrades$`Years of Experience`) = list("Less than 10 years" = c(0:10),
+                                       "11 to 20 years" =c(11:20),
+                                       "21 to 30 years " = c(21:30), 
+                                       "31 years and above" = c(31:56))
+summary(healthgrades$`Years of Experience`)
+
+boxplot(healthgrades$Rating~healthgrades$`Years of Experience`, # Specify the variables to graph, quantitative variable first
+        col=c("orange","thistle","lightgreen","lightblue","gray","yellow"), # Specify the data set that contains the variables
+        main = "Rating over Years of Experience on Healthgrades", #Create the chart title
+        xlab = "Rating",  #Create the x-axis label
+        ylab = "Years of Experience",
+        las=1,  # Width of box as proportion of original
+        whisklty = 1,  # Whisker line type; 1 = solid line
+        staplelty = 0,  # Staple (line at end) type; 0 = none
+        outpch = 16,  # Symbols for outliers; 16 = filled circle
+        outcol = "slategray3", 
+        notch=T,horizontal = T# Color for outliers
+) #Create the y-axis label
+
+# Checking the Significance Level of the Factors created
+years.aov1 <- aov(healthgrades$Rating~healthgrades$`Years of Experience`, data = healthgrades)
+summary(years.aov1)
+
+TukeyHSD(years.aov1)
+
+# Thus, there is not much significance 
+
+```
+
+## Plots for Years of Experience on HealthGrades 
+
+```{r}
+
+health %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=healthgrades$Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating over Gender spread across Years of Experience on HealthGrades\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")+#hide the side signal of fill parameter
+ facet_wrap(~healthgrades$`Years of Experience`)
+
+```
+
+
+## Combined 
+
+```{r}
+options(scipen=999)
+#Combined(Both Ratemds and Healthgrades)
+
+hcommon=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,7,14,17,16,19,33)])
+
+rcommon=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,6,11,14,12,16,33)])
+
+dcombine=data.frame(rbind(hcommon,rcommon))
+str(dcombine)
+
+# Print Descriptive Statistics for Combined
+kable(xtable(describe(dcombine)[c(3,4,5,8,9,11)]))
+## Multiple t-tests for RateMDs
+a<- lapply(dcombine[,-c(1:2)], function(x) t.test(x ~ dcombine$Gender, var.equal = TRUE)$p.value)
+print(a)
+
+# Checking the Significance Level of the Gender 
+years.aov1 <- aov(dcombine$Rating~dcombine$Gender, data = dcombine)
+summary(years.aov1)
+ 
+TukeyHSD(years.aov1)
+
+# Thus, there is not much significance 
+
+# Checking the Significance Level of the Years of Experience  
+years.aov1 <- aov(dcombine$Rating~dcombine$Years.of.Experience, data = dcombine)
+summary(years.aov1)
+ 
+TukeyHSD(years.aov1)
+
+# Thus, there is not much significance
+
+```
+
+## Plotting for Combined results 
+
+```{r}
+
+dcombine %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+dcombine %>% #plot Positive_Proportion over Gender 
+  ggplot(aes(x=Positive_Proportion,fill=dcombine$Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Positive Proportion by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="Positive_Proportion",y = "Density of Positive Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+dcombine %>% #plot Negative_Proportion over Gender 
+  ggplot(aes(x=Negative_Proportion,fill=Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Negative_Proportion by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="Negative_Proportion",y = "Density of Negative_Proportion")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+dcombine %>% #plot `Average neg_score` over Gender 
+  ggplot(aes(x=Average.neg_score,fill=Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average neg_score` by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="`Average neg_score`",y = "Density of `Average neg_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+dcombine %>% #plot `Average pos_score` over Gender 
+  ggplot(aes(x=Average.pos_score,fill=Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of `Average pos_score` by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="`Average pos_score`",y = "Density of `Average pos_score`")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+dcombine %>% #plot Overall_score over Gender 
+  ggplot(aes(x=Overall_score,fill=Gender))+
+  geom_density(alpha=.5,position="identity")+
+  labs(title = "Density of Overall_score by Gender on Both - Healthgrades and RateMDs\n(blue=Female, red=Male)",x="Overall_score",y = "Density of Overall_score")+#add title and axis labels
+  theme(legend.position="none")#hide the side signal of fill parameter
+
+
+###### Checking  ######
+
+boxplot(dcombine$Rating~dcombine$Years.of.Experience, # Specify the variables to graph, quantitative variable first
+        col=c("orange","thistle","lightgreen","lightblue","gray","yellow"), # Specify the data set that contains the variables
+        main = "Rating over Years of Experience on Healthgrades and RateMDs", #Create the chart title
+        xlab = "Years of Experience",  #Create the x-axis label
+        ylab = "Rating",
+        las=1,  # Width of box as proportion of original
+        whisklty = 1,  # Whisker line type; 1 = solid line
+        staplelty = 0,  # Staple (line at end) type; 0 = none
+        outpch = 16,  # Symbols for outliers; 16 = filled circle
+        outcol = "slategray3", 
+        notch=F,horizontal = F# Color for outliers
+) #Create the y-axis label
+
+#######Checking 
+
+### No of years of Experience on both the Websites 
+
+dcombine %>% #plot rating over Gender 
+  ggplot(aes(x=Rating,fill=Gender))+
+  geom_density(alpha=.4,position="identity")+
+  labs(title = "Density of Rating over Gender spread across Years of Experience on HealthGrades and RateMDs\n(blue=Female, red=Male)",x="Rating",y = "Density of Rating")+#add title and axis labels
+  theme(legend.position="none")+#hide the side signal of fill parameter
+ facet_wrap(~dcombine$Years.of.Experience)
+
+
+
+```
+
+## Linear Regression Modeling
+
+
+```{r}
+
+library(corrplot)
+library(lm.beta)
+## Healthgrades 
+#str(ratemdsfinal)
+#str(healthgrades)
+
+hdff1=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,7)])
+names(hdff1)
+hdff2=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,14)])
+names(hdff2)
+hdff3=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,17)])
+names(hdff3)
+hdff4=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,16)])
+names(hdff4)
+hdff5=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,19)])
+names(hdff5)
+hdff6=data.frame(healthgrades[,c(3,5,20,21,22,23,24,25,26,27,28,29,30,31,32,33)])
+names(hdff6)
+
+#Regression
+
+lh1=lm(Rating~.,data = hdff1)
+lhs1=lm.beta(lh1)
+
+
+lh2=lm(Positive_Proportion~.,data = hdff2)
+lhs2=lm.beta(lh2)
+
+
+lh3=lm(Negative_Proportion~.,data = hdff3)
+lhs3=lm.beta(lh3)
+
+
+lh4=lm(Average.pos_score~.,data = hdff4)
+lhs4=lm.beta(lh4)
+
+
+lh5=lm(Average.neg_score~.,data = hdff5)
+lhs5=lm.beta(lh5)
+
+lh6=lm(Overall_score~.,data = hdff6)
+lhs6=lm.beta(lh6)
+
+library(stargazer)
+
+
+
+
+## Corelation Plot  
+
+str(hdff1)
+
+corrplot(cor(hdff1[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(hdff2[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(hdff3[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(hdff4[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(hdff5[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(hdff6[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+
+# RateMDs
+
+rdff1=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,6)])
+rdff2=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,11)])
+rdff3=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,14)])
+rdff4=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,12)])
+rdff5=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,16)])
+rdff6=data.frame(ratemdsfinal[,c(3,4,17,18,19,20,21,22,23,24,25,26,27,28,32,33)])
+
+
+#Correlation plots
+corrplot(cor(rdff1[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(rdff2[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(rdff3[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(rdff4[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(rdff5[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(rdff6[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+
+#Regression
+lr1=lm(Rating~.,data = rdff1)
+lrs1=lm.beta(lr1)
+
+
+lr2=lm(Positive_Proportion~.,data = rdff2)
+lrs2=lm.beta(lr2)
+
+
+lr3=lm(Negative_Proportion~.,data = rdff3)
+lrs3=lm.beta(lr3)
+
+
+lr4=lm(Average.pos_score~.,data = rdff4)
+lrs4=lm.beta(lr4)
+
+
+lr5=lm(Average.neg_score~.,data = rdff5)
+lrs5=lm.beta(lr5)
+
+lr6=lm(Overall_score~.,data = hdff6)
+lrs6=lm.beta(lr6)
+
+lcs6
+
+```
+## Combined Linear Modeling 
+
+```{r}
+
+comdff1=data.frame(dcombine[,-c(17,18,19,20,21)])
+comdff2=data.frame(dcombine[,-c(16,18,19,20,21)])
+comdff3=data.frame(dcombine[,-c(16,17,19,20,21)])
+comdff4=data.frame(dcombine[,-c(16,17,18,20,21)])
+comdff5=data.frame(dcombine[,-c(16,17,18,19,21)])
+comdff6=data.frame(dcombine[,-c(16,17,18,19,20)])
+
+str(comdff6)
+
+#Regression
+lc1=lm(Rating~.,data = comdff1)
+lcs1=lm.beta(lc1)
+
+
+lc2=lm(Positive_Proportion~.,data = comdff2)
+lcs2=lm.beta(lc2)
+
+
+lc3=lm(Negative_Proportion~.,data = comdff3)
+lcs3=lm.beta(lc3)
+
+
+lc4=lm(Average.pos_score~.,data = comdff4)
+lcs4=lm.beta(lc4)
+
+
+lc5=lm(Average.neg_score~.,data = comdff5)
+lcs5=lm.beta(lc5)
+
+lc6=lm(Overall_score~.,data = comdff6)
+lcs6=lm.beta(lc6)
+
+
+#Correlation plots
+
+str(comdff1)
+corrplot(cor(comdff1[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(comdff2[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(comdff3[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(comdff4[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(comdff5[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+corrplot(cor(comdff6[,-c(1:2)]),method="circle", addCoef.col="black", diag=F, type="upper")
+
+
+
+
+#Stargazer
+
+library(stargazer)
+#stargazer(lh1,lh2,lh3,lh4,lh5,lh6, type="text",out = "Stargazer_healthgrades.txt")
+#stargazer(lr1,lr2,lr3,lr4,lr5,lr6, type="text",out="stargazer_ratemds.txt")
+#stargazer(lc1,lc2,lc3,lc4,lc5,lc6, type="text",out="stargazer_combined.txt")
+stargazer(lh1,lh2,lh3,lh4,lh5,lh6, type="text", out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/healthgrades.txt")
+stargazer(lr1,lr2,lr3,lr4,lr5,lr6, type="text", out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/ratemds.txt")
+stargazer(lc1,lc2,lc3,lc4,lc5,lc6, type="text", out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/combined.txt")
+
+
+stargazer(lh1,lh2,lh3,lh4,lh5,lh6, type="text",coef=list(lhs1$standardized.coefficients,lhs2$standardized.coefficients,lhs3$standardized.coefficients,lhs4$standardized.coefficients,lhs5$standardized.coefficients,lhs6$standardized.coefficients),se=list(lh1$coefficients,lh2$coefficients,lh3$coefficients,lh4$coefficients,lh5$coefficients,lh6$coefficients),out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/healthgrades.txt")
+
+stargazer(lr1,lr2,lr3,lr4,lr5,lr6, type="text",coef=list(lrs1$standardized.coefficients,lrs2$standardized.coefficients,lrs3$standardized.coefficients,lrs4$standardized.coefficients,lrs5$standardized.coefficients,lrs6$standardized.coefficients),se=list(lr1$coefficients,lr2$coefficients,lr3$coefficients,lr4$coefficients,lr5$coefficients,lr6$coefficients), out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/ratemds.txt")
+
+stargazer(lc1,lc2,lc3,lc4,lc5,lc6, type="text",coef=list(lcs1$standardized.coefficients,lcs2$standardized.coefficients,lcs3$standardized.coefficients,lcs4$standardized.coefficients,lcs5$standardized.coefficients,lcs6$standardized.coefficients),se=list(lc1$coefficients,lc2$coefficients,lc3$coefficients,lc4$coefficients,lc5$coefficients,lc6$coefficients), out="C:/Users/rramn/Documents/Healthcare_analytics/physician_reviews_mining/combined.txt")
+
+
+```
+
+
+
+
+
+
+
+
